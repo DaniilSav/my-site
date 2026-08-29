@@ -411,6 +411,11 @@
     outline-offset: 2px;
   }
 
+  .submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
   .form-status {
     font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
     font-size: 0.85rem;
@@ -506,6 +511,7 @@
   <footer>Даниил Савостин — 25 лет</footer>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
   (function () {
     var root = document.documentElement;
@@ -541,7 +547,13 @@
   })();
 
   (function () {
+    var EMAILJS_SERVICE_ID = 'service_b0yq4gs';
+    var EMAILJS_TEMPLATE_ID = 'template_j7uadt5';
+    var EMAILJS_PUBLIC_KEY = 'lGdMLB5r-gmQqcRuT';
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
     var form = document.getElementById('contact-form');
+    var submitButton = form.querySelector('.submit-btn');
     var status = document.getElementById('form-status');
     var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -610,11 +622,27 @@
         email: fields.email.input.value.trim(),
         message: fields.message.input.value.trim()
       };
-      console.log('Contact form submission:', data);
 
+      submitButton.disabled = true;
+      submitButton.textContent = 'Отправка…';
       status.classList.remove('is-error');
-      status.textContent = 'Сообщение готово к отправке (пока только в консоли — сервер ещё не подключён).';
-      form.reset();
+      status.textContent = 'Отправляю сообщение…';
+
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, data)
+        .then(function () {
+          status.classList.remove('is-error');
+          status.textContent = 'Сообщение отправлено — спасибо, я скоро отвечу!';
+          form.reset();
+        })
+        .catch(function (error) {
+          console.error('EmailJS error:', error);
+          status.classList.add('is-error');
+          status.textContent = 'Не получилось отправить сообщение. Попробуйте ещё раз или напишите на почту напрямую.';
+        })
+        .finally(function () {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Отправить';
+        });
     });
   })();
 </script>
