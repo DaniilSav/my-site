@@ -22,6 +22,8 @@
     --code-key: #7fd6b0;
     --code-string: #f0a86e;
     --focus: #17724f;
+    --error: #b83b3b;
+    --error-soft: #fbe7e5;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -40,6 +42,8 @@
       --code-key: #7fd6b0;
       --code-string: #f0a86e;
       --focus: #52d3a3;
+      --error: #ef6a63;
+      --error-soft: #3a1f1d;
     }
   }
 
@@ -58,6 +62,8 @@
     --code-key: #7fd6b0;
     --code-string: #f0a86e;
     --focus: #52d3a3;
+    --error: #ef6a63;
+    --error-soft: #3a1f1d;
   }
 
   * { box-sizing: border-box; }
@@ -317,6 +323,105 @@
     border-radius: 2px;
   }
 
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    max-width: 34rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .field label {
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .field input,
+  .field textarea {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    padding: 0.7rem 0.85rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: 1.5;
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .field-error {
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.76rem;
+    color: var(--error);
+    margin: 0;
+    min-height: 1.1em;
+  }
+
+  .field.has-error input,
+  .field.has-error textarea {
+    border-color: var(--error);
+    background: var(--error-soft);
+  }
+
+  .submit-btn {
+    align-self: flex-start;
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+
+  .submit-btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .submit-btn:active {
+    transform: scale(0.97);
+  }
+
+  .submit-btn:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .form-status {
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin: 0;
+  }
+
+  .form-status.is-error {
+    color: var(--error);
+  }
+
   footer {
     font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
     font-size: 0.75rem;
@@ -339,6 +444,7 @@
   <nav class="site-nav" aria-label="Разделы страницы">
     <a href="#about">Обо мне</a>
     <a href="#contacts">Контакты</a>
+    <a href="#feedback">Написать</a>
   </nav>
 
   <header class="hero">
@@ -369,6 +475,32 @@
   <span class="key">"email"</span><span class="punct">:</span> <span class="str">"<a href="mailto:daniilsavostin4@gmail.com">daniilsavostin4@gmail.com</a>"</span>
 <span class="punct">}</span></pre>
     </div>
+  </section>
+
+  <section class="feedback" id="feedback">
+    <p class="label">Написать мне</p>
+    <form class="contact-form" id="contact-form" novalidate>
+      <div class="field" id="name-field">
+        <label for="name">Имя</label>
+        <input type="text" id="name" name="name" autocomplete="name">
+        <p class="field-error" id="name-error" role="alert"></p>
+      </div>
+
+      <div class="field" id="email-field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email">
+        <p class="field-error" id="email-error" role="alert"></p>
+      </div>
+
+      <div class="field" id="message-field">
+        <label for="message">Сообщение</label>
+        <textarea id="message" name="message" rows="4"></textarea>
+        <p class="field-error" id="message-error" role="alert"></p>
+      </div>
+
+      <button type="submit" class="submit-btn">Отправить</button>
+      <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+    </form>
   </section>
 
   <footer>Даниил Савостин — 25 лет</footer>
@@ -405,6 +537,84 @@
       root.classList.add(next + '-theme');
       localStorage.setItem(STORAGE_KEY, next);
       render();
+    });
+  })();
+
+  (function () {
+    var form = document.getElementById('contact-form');
+    var status = document.getElementById('form-status');
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    var fields = {
+      name: {
+        input: document.getElementById('name'),
+        error: document.getElementById('name-error'),
+        wrap: document.getElementById('name-field'),
+        validate: function (value) {
+          return value.trim() ? '' : 'Введите имя';
+        }
+      },
+      email: {
+        input: document.getElementById('email'),
+        error: document.getElementById('email-error'),
+        wrap: document.getElementById('email-field'),
+        validate: function (value) {
+          if (!value.trim()) return 'Введите email';
+          if (!emailPattern.test(value.trim())) return 'Проверьте формат email, например name@example.com';
+          return '';
+        }
+      },
+      message: {
+        input: document.getElementById('message'),
+        error: document.getElementById('message-error'),
+        wrap: document.getElementById('message-field'),
+        validate: function (value) {
+          return value.trim() ? '' : 'Введите сообщение';
+        }
+      }
+    };
+
+    function validateField(field) {
+      var message = field.validate(field.input.value);
+      field.error.textContent = message;
+      field.wrap.classList.toggle('has-error', Boolean(message));
+      return !message;
+    }
+
+    Object.keys(fields).forEach(function (key) {
+      fields[key].input.addEventListener('input', function () {
+        validateField(fields[key]);
+      });
+    });
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      var results = Object.keys(fields).map(function (key) {
+        return validateField(fields[key]);
+      });
+      var isValid = results.every(Boolean);
+
+      if (!isValid) {
+        status.textContent = 'Проверьте поля, отмеченные ошибкой.';
+        status.classList.add('is-error');
+        var firstInvalidKey = Object.keys(fields).filter(function (key) {
+          return fields[key].wrap.classList.contains('has-error');
+        })[0];
+        fields[firstInvalidKey].input.focus();
+        return;
+      }
+
+      var data = {
+        name: fields.name.input.value.trim(),
+        email: fields.email.input.value.trim(),
+        message: fields.message.input.value.trim()
+      };
+      console.log('Contact form submission:', data);
+
+      status.classList.remove('is-error');
+      status.textContent = 'Сообщение готово к отправке (пока только в консоли — сервер ещё не подключён).';
+      form.reset();
     });
   })();
 </script>
