@@ -62,7 +62,10 @@
 
   * { box-sizing: border-box; }
 
-  html { color-scheme: light dark; }
+  html {
+    color-scheme: light dark;
+    scroll-behavior: smooth;
+  }
 
   body {
     background: var(--bg);
@@ -92,6 +95,39 @@
   .label::before {
     content: '// ';
     color: var(--accent);
+  }
+
+  .site-nav {
+    display: flex;
+    gap: 1.6rem;
+    margin-bottom: 2.75rem;
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+  }
+
+  .site-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .site-nav a::before {
+    content: '#';
+    color: var(--marker);
+    margin-right: 0.15em;
+  }
+
+  .site-nav a:hover,
+  .site-nav a:focus-visible {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  section[id] {
+    scroll-margin-top: 2rem;
   }
 
   .hero {
@@ -257,12 +293,18 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
     * { transition: none !important; }
   }
 </style>
 </head>
 <body>
 <div class="page">
+  <nav class="site-nav" aria-label="Разделы страницы">
+    <a href="#about">Обо мне</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+
   <header class="hero">
     <div class="avatar-wrap">
       <img class="avatar" src="assets/avatar.jpg" alt="Даниил Савостин" width="116" height="116">
@@ -274,7 +316,7 @@
     </div>
   </header>
 
-  <section class="about">
+  <section class="about" id="about">
     <p class="label">Обо мне</p>
     <p class="about-text">Работаю преподавателем, а по совместительству — тренером: мне важно объяснять сложные вещи простым языком и видеть, как у людей получается. В последнее время увлёкся веб-разработкой и учусь ей так же, как советую учиться своим ученикам — маленькими понятными шагами.</p>
     <div class="role-chips">
@@ -284,7 +326,7 @@
     </div>
   </section>
 
-  <section class="contacts">
+  <section class="contacts" id="contacts">
     <p class="label">Контакты</p>
     <div class="contact-card">
       <pre><span class="punct">{</span>
