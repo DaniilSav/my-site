@@ -25,7 +25,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
+    :root:not(.light-theme) {
       --bg: #121615;
       --surface: #1b2120;
       --surface-border: #2a3230;
@@ -43,7 +43,7 @@
     }
   }
 
-  :root[data-theme="dark"] {
+  :root.dark-theme {
     --bg: #121615;
     --surface: #1b2120;
     --surface-border: #2a3230;
@@ -95,6 +95,40 @@
   .label::before {
     content: '// ';
     color: var(--accent);
+  }
+
+  .theme-toggle {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid var(--surface-border);
+    background: var(--surface);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 10;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent);
+  }
+
+  .theme-toggle:active {
+    transform: scale(0.94);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
   }
 
   .site-nav {
@@ -299,6 +333,8 @@
 </style>
 </head>
 <body>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Переключить тему"></button>
+
 <div class="page">
   <nav class="site-nav" aria-label="Разделы страницы">
     <a href="#about">Обо мне</a>
@@ -337,5 +373,40 @@
 
   <footer>Даниил Савостин — 25 лет</footer>
 </div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var toggle = document.getElementById('theme-toggle');
+    var STORAGE_KEY = 'theme-preference';
+    var media = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function isDarkNow() {
+      if (root.classList.contains('dark-theme')) return true;
+      if (root.classList.contains('light-theme')) return false;
+      return media.matches;
+    }
+
+    function render() {
+      var dark = isDarkNow();
+      toggle.textContent = dark ? '☀' : '☾';
+      toggle.setAttribute('aria-pressed', String(dark));
+      toggle.setAttribute('aria-label', dark ? 'Включить светлую тему' : 'Включить тёмную тему');
+    }
+
+    var saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === 'dark') root.classList.add('dark-theme');
+    if (saved === 'light') root.classList.add('light-theme');
+    render();
+
+    toggle.addEventListener('click', function () {
+      var next = isDarkNow() ? 'light' : 'dark';
+      root.classList.remove('light-theme', 'dark-theme');
+      root.classList.add(next + '-theme');
+      localStorage.setItem(STORAGE_KEY, next);
+      render();
+    });
+  })();
+</script>
 </body>
 </html>
