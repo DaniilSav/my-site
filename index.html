@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Даниил Савостин</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f2f4f2;
+    --surface-border: #e1e5e1;
+    --ink: #14181a;
+    --muted: #565f5c;
+    --accent: #17724f;
+    --accent-soft: #e4f1ea;
+    --marker: #d9642c;
+    --marker-soft: #fbe3d4;
+    --code-bg: #101514;
+    --code-ink: #eef2ee;
+    --code-key: #7fd6b0;
+    --code-string: #f0a86e;
+    --focus: #17724f;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121615;
+      --surface: #1b2120;
+      --surface-border: #2a3230;
+      --ink: #edf1ee;
+      --muted: #9aa6a1;
+      --accent: #52d3a3;
+      --accent-soft: #1c2f28;
+      --marker: #f0925a;
+      --marker-soft: #2f2019;
+      --code-bg: #0b0e0d;
+      --code-ink: #e9efe9;
+      --code-key: #7fd6b0;
+      --code-string: #f0a86e;
+      --focus: #52d3a3;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #121615;
+    --surface: #1b2120;
+    --surface-border: #2a3230;
+    --ink: #edf1ee;
+    --muted: #9aa6a1;
+    --accent: #52d3a3;
+    --accent-soft: #1c2f28;
+    --marker: #f0925a;
+    --marker-soft: #2f2019;
+    --code-bg: #0b0e0d;
+    --code-ink: #e9efe9;
+    --code-key: #7fd6b0;
+    --code-string: #f0a86e;
+    --focus: #52d3a3;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { color-scheme: light dark; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 5rem) 1.5rem 4rem;
+  }
+
+  .label {
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.85rem;
+  }
+
+  .label::before {
+    content: '// ';
+    color: var(--accent);
+  }
+
+  .hero {
+    margin-bottom: 3rem;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.1rem;
+  }
+
+  h1 {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 8vw, 4.2rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h1 .surname {
+    position: relative;
+    display: inline-block;
+  }
+
+  h1 .surname::after {
+    content: '';
+    position: absolute;
+    left: -0.06em;
+    right: -0.03em;
+    bottom: 0.08em;
+    height: 0.32em;
+    background: var(--marker-soft);
+    z-index: -1;
+    transform: rotate(-0.6deg);
+    border-radius: 2px 6px 3px 5px;
+  }
+
+  .tagline {
+    font-size: 1.08rem;
+    color: var(--muted);
+    max-width: 30rem;
+    margin: 1.4rem 0 0;
+  }
+
+  section {
+    margin-bottom: 3rem;
+  }
+
+  .about-text {
+    font-size: 1.12rem;
+    max-width: 34rem;
+    margin: 0;
+  }
+
+  .role-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 1.4rem;
+  }
+
+  .role-chips span {
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--surface-border);
+    padding: 0.4rem 0.7rem;
+    border-radius: 4px;
+  }
+
+  .contact-card {
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 1.4rem 1.5rem;
+    overflow-x: auto;
+  }
+
+  .contact-card pre {
+    margin: 0;
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--code-ink);
+    white-space: pre;
+  }
+
+  .contact-card .key { color: var(--code-key); }
+  .contact-card .punct { color: var(--muted); }
+  .contact-card .str { color: var(--code-string); }
+
+  .contact-card a {
+    color: var(--code-string);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(240, 168, 110, 0.5);
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .contact-card a:hover {
+    color: var(--code-key);
+    border-bottom-color: currentColor;
+  }
+
+  a:focus-visible,
+  .contact-card a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  footer {
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    border-top: 1px solid var(--surface-border);
+    padding-top: 1.4rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <p class="eyebrow">Преподаватель · Тренер</p>
+    <h1>Даниил<br><span class="surname">Савостин</span></h1>
+    <p class="tagline">25 лет. Учу других — и понемногу учусь сам, делая первые шаги в веб-разработке.</p>
+  </header>
+
+  <section class="about">
+    <p class="label">Обо мне</p>
+    <p class="about-text">Работаю преподавателем, а по совместительству — тренером: мне важно объяснять сложные вещи простым языком и видеть, как у людей получается. В последнее время увлёкся веб-разработкой и учусь ей так же, как советую учиться своим ученикам — маленькими понятными шагами.</p>
+    <div class="role-chips">
+      <span>преподаватель</span>
+      <span>тренер</span>
+      <span>начинающий веб-разработчик</span>
+    </div>
+  </section>
+
+  <section class="contacts">
+    <p class="label">Контакты</p>
+    <div class="contact-card">
+      <pre><span class="punct">{</span>
+  <span class="key">"email"</span><span class="punct">:</span> <span class="str">"<a href="mailto:daniilsavostin4@gmail.com">daniilsavostin4@gmail.com</a>"</span>
+<span class="punct">}</span></pre>
+    </div>
+  </section>
+
+  <footer>Даниил Савостин — 25 лет</footer>
+</div>
+</body>
+</html>
