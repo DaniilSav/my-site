@@ -95,7 +95,45 @@
   }
 
   .hero {
+    display: flex;
+    align-items: center;
+    gap: 1.85rem;
+    flex-wrap: wrap;
     margin-bottom: 3rem;
+  }
+
+  .avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .avatar-wrap::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: -10px;
+    bottom: -10px;
+    background: var(--marker-soft);
+    border-radius: 16px;
+    transform: rotate(-2deg);
+    z-index: -1;
+  }
+
+  .avatar {
+    display: block;
+    width: 116px;
+    height: 116px;
+    object-fit: cover;
+    object-position: 60% 35%;
+    border-radius: 12px;
+    border: 2px solid var(--surface-border);
+    background: var(--surface);
+    filter: grayscale(1) contrast(1.05);
+  }
+
+  .hero-text {
+    min-width: 0;
   }
 
   .eyebrow {
@@ -226,9 +264,14 @@
 <body>
 <div class="page">
   <header class="hero">
-    <p class="eyebrow">Преподаватель · Тренер</p>
-    <h1>Даниил<br><span class="surname">Савостин</span></h1>
-    <p class="tagline">25 лет. Учу других — и понемногу учусь сам, делая первые шаги в веб-разработке.</p>
+    <div class="avatar-wrap">
+      <img class="avatar" src="assets/avatar.jpg" alt="Даниил Савостин" width="116" height="116">
+    </div>
+    <div class="hero-text">
+      <p class="eyebrow">Преподаватель · Тренер</p>
+      <h1>Даниил<br><span class="surname">Савостин</span></h1>
+      <p class="tagline">25 лет. Учу других — и понемногу учусь сам, делая первые шаги в веб-разработке.</p>
+    </div>
   </header>
 
   <section class="about">
